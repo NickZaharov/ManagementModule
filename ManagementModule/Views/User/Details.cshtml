@@ -1,0 +1,48 @@
+﻿@using ManagementModule.DTOs.Users
+@model UserDetailsViewDto
+
+<div class="k-card k-card-type-rich">
+    <div class="k-card-header">
+        <h3>@Model.FirstName @Model.LastName</h3>
+    </div>
+
+
+    <div class="k-card-body">
+        <h4>Назначенные роли</h4>
+        <form asp-action="AssignRoles" method="post">
+            <input type="hidden" name="id" value="@Model.UserId" />
+
+            @(Html.Kendo().CheckBoxGroup()
+                        .Name("AssignedRoles")
+                        .BindTo(Model.AvailableRoles)
+                        .Value(Model.SelectedRoleIds.Select(id => id.ToString()))
+                        .Layout("horizontal")
+                        )
+            @(Html.Kendo().Button()
+                        .Name("applyRolesBtn")
+                        .Content("Применить")
+                        .ThemeColor(ThemeColor.Primary)
+                        .Icon("check")
+                        .HtmlAttributes(new { @class = "ms-2", type = "submit" })
+                        )
+        </form>
+    </div>
+
+    <div class="k-card-body">
+        <h4>Права сотрудника</h4>
+        <div class="category-row">
+            @foreach (var group in Model.PermissionsByCategory)
+            {
+                <div class="category-block">
+                    <h5>@group.Category</h5>
+                    <ul class="k-list k-list-md">
+                        @foreach (var permission in group.Permissions)
+                        {
+                            <li class="k-list-item">@permission</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>

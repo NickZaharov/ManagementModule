@@ -1,0 +1,77 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "B:\\ManagementModule\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1AC1BAE6-91C2-4686-BCD6-167C7903D71A}|ManagementModule\\ManagementModule.csproj|b:\\managementmodule\\managementmodule\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1AC1BAE6-91C2-4686-BCD6-167C7903D71A}|ManagementModule\\ManagementModule.csproj|solutionrelative:managementmodule\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1AC1BAE6-91C2-4686-BCD6-167C7903D71A}|ManagementModule\\ManagementModule.csproj|b:\\managementmodule\\managementmodule\\views\\user\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1AC1BAE6-91C2-4686-BCD6-167C7903D71A}|ManagementModule\\ManagementModule.csproj|solutionrelative:managementmodule\\views\\user\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1AC1BAE6-91C2-4686-BCD6-167C7903D71A}|ManagementModule\\ManagementModule.csproj|b:\\managementmodule\\managementmodule\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1AC1BAE6-91C2-4686-BCD6-167C7903D71A}|ManagementModule\\ManagementModule.csproj|solutionrelative:managementmodule\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{a2c8b774-0984-495f-8428-e6140b2d66e0}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "B:\\ManagementModule\\ManagementModule\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "ManagementModule\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "B:\\ManagementModule\\ManagementModule\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "ManagementModule\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-13T21:43:43.129Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "B:\\ManagementModule\\ManagementModule\\Views\\User\\Details.cshtml",
+              "RelativeDocumentMoniker": "ManagementModule\\Views\\User\\Details.cshtml",
+              "ToolTip": "B:\\ManagementModule\\ManagementModule\\Views\\User\\Details.cshtml",
+              "RelativeToolTip": "ManagementModule\\Views\\User\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-13T15:21:33.518Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "B:\\ManagementModule\\ManagementModule\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "ManagementModule\\Controllers\\UserController.cs",
+              "ToolTip": "B:\\ManagementModule\\ManagementModule\\Controllers\\UserController.cs",
+              "RelativeToolTip": "ManagementModule\\Controllers\\UserController.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAswDMAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-13T14:11:26.224Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+﻿
+<div class="row">
+    <div class="col-md-4">
+		<h5 class="mb-3">Роли</h5>
+        <div class="mb-3">
+			@(
+				Html.Kendo().Button()
+					.Name("createRoleBtn")
+					.Content("Создать роль")
+					.ThemeColor(ThemeColor.Primary)
+					.Icon("plus")
+					.HtmlAttributes(new { @class = "me-2" })
+			)
+			@(
+				Html.Kendo().Button()
+					.Name("deleteRoleBtn")
+					.Content("Удалить выбранную")
+					.ThemeColor(ThemeColor.Error)
+					.Icon("trash")
+			)
+        </div>
+        @(Html.Kendo().PanelBar()
+                .Name("rolesPanel")
+                .Items(items => { })
+                )
+    </div>
+
+	<div class="col-md-8">
+		<h5 class="mb-3">Права @(
+			Html.Kendo().Button()
+				.Name("applyPermissionsBtn")
+				.Content("Применить")
+				.ThemeColor(ThemeColor.Primary)
+				.Icon("check")
+				.HtmlAttributes(new { @class = "ms-2" })
+		)</h5>
+        @(Html.Kendo().TextBox()
+            .Name("permissionSearch")
+            .Placeholder("Поиск по правам...")
+            .HtmlAttributes(new { @class = "mb-2 w-100" })
+        )
+        @(Html.Kendo().TreeView()
+                .Name("permissionsTree")
+                .DataTextField("text")
+				.LoadOnDemand(false)
+                .Checkboxes(c => c.CheckChildren(true))
+                .AutoBind(false)
+				.DataSource(ds => ds
+					.Read(r => r.Url("/Role/GetRolePermissions").Data("getSelectedRoleId"))
+					.Model(m => {
+						m.Id("id");
+						m.Children("items");
+					})
+				)
+                )
+    </div>
+</div>
+
+<script>
+	var selectedRoleId = null;
+
+	$(document).ready(function () {
+		loadRolesIntoPanelBar();
+
+		var panelBar = $("#rolesPanel").data("kendoPanelBar");
+		if (panelBar) {
+			panelBar.bind("select", function (e) {
+				var roleId = $(e.item).data("roleid");
+				selectedRoleId = roleId;
+				$("#permissionsTree").data("kendoTreeView").dataSource.read();
+			});
+		}
+	});
+
+    // Загрузка panelBar
+    function loadRolesIntoPanelBar() {
+        fetch("/Role/GetRoles")
+            .then(res => res.json())
+            .then(roles => {
+                const panelBar = $("#rolesPanel").data("kendoPanelBar");
+                panelBar.remove(panelBar.element.children());
+
+                const items = roles.map(role => ({
+                    text: role.RoleName,
+                    encoded: true,
+                    cssClass: "role-panel-item",
+                }));
+                panelBar.append(items);
+                $("#rolesPanel").find("li.role-panel-item").each(function(index) {
+                    $(this).attr("data-roleid", roles[index].RoleId);
+                });
+        });
+    }
+
+    function getSelectedRoleId() {
+      return { roleId: selectedRoleId };
+    }
+
+    // Общее выделение
+    $("#permissionsTree").on("change", ".k-checkbox", function(e) {
+      const treeview = $("#permissionsTree").data("kendoTreeView");
+      if (!treeview) return;
+      const li = $(e.target).closest("li");
+      if (!li.length) return;
+      const model = treeview.dataItem(li);
+      if (!model) return;
+      const isChecked = $(e.target).is(":checked");
+
+      function setCheckedRecursive(dataItem, value) {
+        try { dataItem.set("checked", !!value); } catch(_) { dataItem.checked = !!value; }
+        if (dataItem.hasChildren && dataItem.items && dataItem.items.length) {
+          const children = dataItem.items.view ? dataItem.items.view() : dataItem.items;
+          for (var i = 0; i < children.length; i++) {
+            setCheckedRecursive(children[i], value);
+          }
+        }
+      }
+
+      if (model.hasChildren) {
+        setCheckedRecursive(model, isChecked);
+      } else {
+        try { model.set("checked", isChecked); } catch(_) { model.checked = isChecked; }
+      }
+    });
+</script>
+
+<script>
+    // Edit ролей
+    $("#createRoleBtn").on("click", function() {
+      const roleName = prompt("Введите имя роли:");
+      if (roleName) {
+        $.ajax({
+          url: "/Role/Create",
+          method: "POST",
+          data: { name: roleName },
+          success: refreshRoles
+        });
+      }
+    });
+
+    $("#deleteRoleBtn").on("click", function() {
+      const selected = $("#rolesPanel").data("kendoPanelBar").select();
+      const roleId = $(selected).data("roleid");
+      if (roleId && confirm("Удалить роль?")) {
+        $.ajax({
+          url: "/Role/Delete",
+          method: "POST",
+          data: { id: roleId },
+          success: function() { loadRolesIntoPanelBar(); }
+        });
+      }
+    });
+
+    function refreshRoles() { loadRolesIntoPanelBar(); }
+
+    // Отправка прав на сервер
+	$(function(){
+
+		$(document).on("click", "#applyPermissionsBtn", function(){
+		    if (!selectedRoleId) {
+			    alert("Сначала выберите роль слева.");
+			    return;
+		    }
+		    const treeView = $("#permissionsTree").data("kendoTreeView");
+		    const ids = collectCheckedIds(treeView);
+		    $.ajax({
+			    url: "/Role/SaveRolePermissions",
+			    method: "POST",
+			    contentType: "application/json; charset=utf-8",
+			    data: JSON.stringify({ roleId: selectedRoleId, permissionIds: ids }),
+			    success: function(){
+				    kendo.alert("Права сохранены");
+			    }
+		    });
+	    });
+    });
+
+    // Сбор чекбоксов
+    function collectCheckedIds(treeView){
+	    const result = [];
+	    function walk(nodes){
+		    nodes.forEach(function(n){
+			    const hasChildren = n.hasChildren || (n.items && n.items.length > 0);
+			    if (hasChildren) {
+				    walk(n.items.view ? n.items.view() : n.items);
+			    } else if (n.checked) {
+				    if (n.id != null) { result.push(n.id); }
+			    }
+		    });
+	    }
+	    walk(treeView.dataSource.view());
+	    return result;
+    }
+
+    // Фильтрация
+    $("#permissionSearch").on("input", function () {
+        var query = (this.value || "").toLowerCase();
+        var treeview = $("#permissionsTree").data("kendoTreeView");
+
+        // Если роль не выбрана
+        if (!selectedRoleId || !treeview || !treeview.dataSource ||
+            !(treeview.dataSource instanceof kendo.data.HierarchicalDataSource) ||
+            !treeview.dataSource.data() || treeview.dataSource.data().length === 0) {
+            return;
+        }
+
+        if (!query) {
+            treeview.dataSource.filter({});
+            return;
+        }
+
+        filterTree(treeview.dataSource, query);
+    });
+
+    function filterTree(dataSource, query) {
+        var hasVisibleChildren = false;
+        var data = (dataSource instanceof kendo.data.HierarchicalDataSource) && dataSource.data();
+
+        for (var i = 0; data && i < data.length; i++) {
+            var item = data[i];
+            var text = (item.text || "").toLowerCase();
+            var itemVisible = (query === true) || (query === "") || (text.indexOf(query) >= 0);
+
+            var anyVisibleChildren = filterTree(item.children, itemVisible || query);
+            hasVisibleChildren = hasVisibleChildren || anyVisibleChildren || itemVisible;
+
+            item.set ? item.set("hidden", !(itemVisible || anyVisibleChildren)) : (item.hidden = !(itemVisible || anyVisibleChildren));
+        }
+
+        if (data) {
+            dataSource.filter({ field: "hidden", operator: "neq", value: true });
+        }
+
+        return hasVisibleChildren;
+    }
+</script>
+
